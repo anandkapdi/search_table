@@ -119,6 +119,37 @@
       </tr>
   </table>
   </div>
+
+<!-- Cart -->
+  <form action="{{url_for('submit_order')}}" method="POST">
+    <div id='menu'>
+      <table class="table table-inverse" id="cart">
+        <tr class="myHead">
+          <th style="width:40%;">Name</th>
+          <th style="width:20%;">Quntity</th>
+          <th style="width:20%;">Price</th>
+          <th style="width:20%;">Total</th>
+        </tr>
+        {% for order in orders %}
+          <tr id="cartBody">
+            <td>{{ order.product_description}}</td>
+            <td>
+              <input type="number" class="form-control" name="quntity_float" onkeyup="cartTotal()" value="{{ order.quntity_float}}">
+            </td>
+            <td>
+              <input type="number" class="form-control" name="price_float" onkeyup="cartTotal()" value="{{ order.price_float}}">
+            </td>
+            <td>
+              <p name="rowTotal"></p>
+            </td>
+            <input type="hidden" name="order_id" value="{{order.key.id()}}">
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <button type="submit" class="btn btn-default">Submit Your Order</button>
+  </form>
+
 <script type="text/javascript">
   // search multiple colums
 $('#search_field').on('keyup', function() {
@@ -136,6 +167,24 @@ $('#search_field').on('keyup', function() {
   });
 
 });
+//cart total
+function cartTotal() {
+  var quntityFloat = document.getElementsByName("quntity_float");
+  var priceFloat = document.getElementsByName("price_float");
+  var rowTotal = document.getElementsByName("rowTotal");
+  var grandTotal = document.getElementById('grandTotal');
+  var numberOfItmes = document.getElementById('numberOfItems');
+  var total = 0;
+  var totalOfQuntity = 0;
+  for (var i = 0; i < quntityFloat.length; i++) {
+    var totalOfRow = Number(quntityFloat[i].value) * Number(priceFloat[i].value);
+    totalOfQuntity += Number(quntityFloat[i].value);
+    total += totalOfRow;
+    rowTotal[i].innerHTML = totalOfRow;
+  }
+  numberOfItmes.innerHTML = totalOfQuntity;
+  grandTotal.innerHTML = total;
+}
 </script>
 </body>
 </html>
